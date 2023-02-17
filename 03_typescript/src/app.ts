@@ -1,3 +1,7 @@
+import { render } from "./helpers/render-tasks.helper";
+import { Task, Category } from "./types/types";
+
+
 const taskNameInputElement: HTMLInputElement = document.querySelector("#name");
 const addButtonElement: HTMLButtonElement = document.querySelector("button");
 const tasksContainerElement: HTMLElement = document.querySelector(".tasks");
@@ -5,14 +9,6 @@ const categoriesContainerElement: HTMLElement =
     document.querySelector(".categories");
 
 let selectedCategory: Category;
-
-type Category = "general" | "work" | "gym" | "hobby";
-
-interface Task {
-    name: string;
-    done: boolean;
-    category?: Category;
-}
 
 const categories: Category[] = ["general", "work", "gym", "hobby"];
 
@@ -33,36 +29,6 @@ const tasks: Task[] = [
         category: "work",
     },
 ];
-
-const render = () => {
-    tasksContainerElement.innerHTML = "";
-    tasks.forEach((task, index) => {
-        const taskElement: HTMLElement = document.createElement("li");
-        if (task.category) {
-            taskElement.classList.add(task.category);
-        }
-        const id: string = `task-${index}`;
-
-        const labelElement: HTMLLabelElement = document.createElement("label");
-        labelElement.innerText = task.name;
-        labelElement.setAttribute("for", id);
-
-        const checkboxElement: HTMLInputElement =
-            document.createElement("input");
-        checkboxElement.type = "checkbox";
-        checkboxElement.name = task.name;
-        checkboxElement.id = id;
-        checkboxElement.checked = task.done;
-        checkboxElement.addEventListener("change", () => {
-            task.done = !task.done;
-        });
-
-        taskElement.appendChild(labelElement);
-        taskElement.appendChild(checkboxElement);
-
-        tasksContainerElement.appendChild(taskElement);
-    });
-};
 
 const renderCategories = () => {
     categories.forEach((category) => {
@@ -100,9 +66,9 @@ addButtonElement.addEventListener("click", (event: Event) => {
         done: false,
         category: selectedCategory,
     });
-    render();
+    render(tasks, tasksContainerElement);
 });
 
 addTask({ name: "zrobić klatę", category: "gym", done: false });
 renderCategories();
-render();
+render(tasks, tasksContainerElement);
